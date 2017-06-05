@@ -1,0 +1,7 @@
+Ala;Kulon;1600;
+Roman;Sadowski;1000;
+Kajetek;Maly;1233;
+Jasiu;Stasiu;1411;
+Jan;Kowalski;1899;
+Frnaek;Marek;1543;
+Milosz;Kijek;1343;
