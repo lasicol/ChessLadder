@@ -36,7 +36,7 @@
     </widget>
    </item>
    <item row="0" column="0" colspan="4">
-    <widget class="QTableWidget" name="tableWidget"/>
+    <widget class="QTableWidget" name="player_list"/>
    </item>
   </layout>
  </widget>

@@ -24,5 +24,5 @@ class CUiCompiler:
 
 
 if __name__ == '__main__':
-    main = CUiCompiler('layout_1_0.ui','py_main_ui').compile()
-    dialog = CUiCompiler('dialog_players','py_dialog_ui').compile()
+    CUiCompiler('layout_1_0.ui', 'py_main_ui').compile()
+    CUiCompiler('dialog_players', 'py_dialog_ui').compile()

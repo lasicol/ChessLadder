@@ -37,18 +37,18 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         for i in list_of_string:
             self.listWidget.addItem(i.str_with_rank())
 
-    def set_table_widget(self, list_):
-        self.tableWidget.setRowCount(100)
-        self.tableWidget.setColumnCount(5)
-        self.tableWidget.setHorizontalHeaderLabels(['ID', 'RANK', 'FIRST NAME', 'LAST NAME', 'ELO'])
-        self.tableWidget.verticalHeader().setVisible(False)
-        self.tableWidget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+    def set_table_widget(self, list_, table_widget):
+        table_widget.setRowCount(100)
+        table_widget.setColumnCount(5)
+        table_widget.setHorizontalHeaderLabels(['ID', 'RANK', 'FIRST NAME', 'LAST NAME', 'ELO'])
+        table_widget.verticalHeader().setVisible(False)
+        table_widget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
         for i, ppl in enumerate(list_):
-            self.tableWidget.setItem(i, 0, QtGui.QTableWidgetItem(str(ppl.id)))
-            self.tableWidget.setItem(i, 1, QtGui.QTableWidgetItem(str(ppl.rank)))
-            self.tableWidget.setItem(i, 2, QtGui.QTableWidgetItem(str(ppl.first_name)))
-            self.tableWidget.setItem(i, 3, QtGui.QTableWidgetItem(str(ppl.last_name)))
-            self.tableWidget.setItem(i, 4, QtGui.QTableWidgetItem(str(ppl.elo)))
+            table_widget.setItem(i, 0, QtGui.QTableWidgetItem(str(ppl.id)))
+            table_widget.setItem(i, 1, QtGui.QTableWidgetItem(str(ppl.rank)))
+            table_widget.setItem(i, 2, QtGui.QTableWidgetItem(str(ppl.first_name)))
+            table_widget.setItem(i, 3, QtGui.QTableWidgetItem(str(ppl.last_name)))
+            table_widget.setItem(i, 4, QtGui.QTableWidgetItem(str(ppl.elo)))
         # item = QtGui.QTableWidgetItem("lody")
         # self.tableWidget.setItem(1,0,item)
 
@@ -59,8 +59,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         except RuntimeError:
             self.child = ChildMDI()
             self.mdiArea.addSubWindow(self.child)
+            self.set_table_widget(t.all_players, self.child.player_list)
             self.child.show()
-
 
         # self.mdiArea.addSubWindow(self.child)
         # sub = self.mdiArea.subWindowList()
@@ -80,6 +80,6 @@ if __name__ == '__main__':
     window = MyApp()
     window.run()
     # window.add_to_list(t.all_players)
-    window.set_table_widget(t.all_players)
+    # window.set_table_widget(t.all_players)
     window.show()
     sys.exit(app.exec_())
