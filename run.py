@@ -25,6 +25,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.subwindows = self.mdiArea.subWindowList()
         self.subwindows[0].hide()
         self.subwindows[0].show()
+        self.set_toolbar()
 
     def setup(self):
         self.mdiArea.setAttribute()
@@ -32,6 +33,10 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
     def run(self):
         self.actionNew_tournament.triggered.connect(self.act_new_tournament_clicked)
+
+    def set_toolbar(self):
+        act_add_user = QtGui.QAction(QtGui.QIcon("Graph\icAddUser.png"), "new user", self)
+        self.toolBar.addAction(act_add_user)
 
     def add_to_list(self, list_of_string):
         for i in list_of_string:
