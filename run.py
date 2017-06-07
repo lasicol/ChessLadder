@@ -3,6 +3,7 @@ import mainClasses
 from UI.py_main_ui import Ui_MainWindow
 from UI.py_dialog_players_ui import Ui_dial_list
 from UI.py_dialog_add_player_ui import Ui_dial_add_player
+from UI.py_dialog_new_tournament_ui import Ui_dial_new_tournament
 from PyQt4 import QtGui, Qt, QtCore
 import sys
 
@@ -28,24 +29,56 @@ class ChildAddPlayer(QtGui.QDialog, Ui_dial_add_player):
         self.btnOK.clicked.connect(self.fun_btn_ok)
         self.btnCancel.clicked.connect(self.fun_btn_cancel)
 
+
+class ChildNewTournament(QtGui.QDialog, Ui_dial_new_tournament):
+    def __init__(self, fun_btn_ok, fun_btn_cancel):
+        super(ChildNewTournament, self).__init__(None)
+        self.setupUi(self)
+        self.fun_btn_ok = fun_btn_ok
+        self.fun_btn_cancel = fun_btn_cancel
+        self.setup()
+
+    def setup(self):
+        # other windows will be disabled whit the option
+        self.setWindowModality(QtCore.Qt.ApplicationModal)
+        self.buttonBox.accepted.connect(self.fun_btn_ok)
+        self.buttonBox.rejected.connect(self.fun_btn_cancel)
+
+
+    def accept(self):
+        pass
+
+
+
 class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
+
+        # Dialogs
         self.dial_player_list = None
         self.dial_add_player = None
-        self.setup()
+        self.dial_new_tournament = None
+
+        # Tournament
+        self.isTournament = True
+        self.T = None
 
         # Toolbar actions:
-        self.act_add_player = None
-        self.act_list = None
+        self.act_add_player = QtGui.QIcon()
+        self.act_list = QtGui.QIcon()
+
+        self.setup()
+        self.update()
 
     def setup(self):
         self.set_toolbar()
 
-
+    def update(self):
+        if not self.isTournament:
+            self.toolBar.setEnabled(False)
 
     def run(self):
         self.actionNew_tournament.triggered.connect(self.act_new_tournament_clicked)
@@ -83,25 +116,16 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         # self.tableWidget.setItem(1,0,item)
 
     def act_new_tournament_clicked(self):
-        # self.subwindows[0].show()
-        if self.dial_player_list is None:
-            self.dial_player_list = ChildPlayerList()
-            self.mdiArea.addSubWindow(self.dial_player_list)
-
-        try:
-            self.dial_player_list.show()
-        except RuntimeError:
-            self.dial_player_list = ChildPlayerList()
-            self.mdiArea.addSubWindow(self.dial_player_list)
-            self.set_table_widget(t.all_players, self.dial_player_list.player_list)
-            self.dial_player_list.show()
+        if self.dial_new_tournament is None:
+            self.dial_new_tournament = ChildNewTournament(self.btn_ok_dial_new_tournament_clicked,
+                                                          self.btn_cancel_dial_new_tournament_clicked)
+        self.dial_new_tournament.show()
 
     def act_add_player_clicked(self):
 
         if self.dial_add_player is None:
             self.dial_add_player = ChildAddPlayer(self.btn_ok_dial_add_player_clicked,
                                                   self.btn_cancel_dial_add_player_clicked)
-
         try:
             self.dial_add_player.show()
         except RuntimeError:
@@ -127,6 +151,17 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
     def btn_cancel_dial_add_player_clicked(self):
         self.dial_add_player.close()
+
+    def btn_ok_dial_new_tournament_clicked(self):
+        if self.dial_new_tournament.edit_tournament_name.text() == '':
+            print('Type something ...')
+        else:
+            self.T = mainClasses.Tournament(self.dial_new_tournament.edit_tournament_name.text())
+            self.dial_new_tournament.close()
+
+    def btn_cancel_dial_new_tournament_clicked(self):
+        self.dial_new_tournament = None
+
 
 if __name__ == '__main__':
     t = mainClasses.Tournament()
