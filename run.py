@@ -17,19 +17,21 @@ class ChildPlayerList(QtGui.QDialog, Ui_dial_list):
 
 
 class ChildAddPlayer(QtGui.QDialog, Ui_dial_add_player):
-    def __init__(self, fun_btn_ok, fun_btn_cancel):
+    def __init__(self, fun_btn_add, fun_btn_ok):
         super(ChildAddPlayer, self).__init__(None)
         self.setupUi(self)
+        self.fun_btn_add = fun_btn_add
         self.fun_btn_ok = fun_btn_ok
-        self.fun_btn_cancel = fun_btn_cancel
         self.setup()
 
     def setup(self):
         # other windows will be disabled whit the option
         self.setWindowModality(QtCore.Qt.ApplicationModal)
-
+        self.btnAdd.clicked.connect(self.fun_btn_add)
         self.btnOK.clicked.connect(self.fun_btn_ok)
-        self.btnCancel.clicked.connect(self.fun_btn_cancel)
+
+    def closeEvent(self, evnt):
+        self.label_status.setText('')
 
 
 class ChildNewTournament(QtGui.QDialog, Ui_dial_new_tournament):
@@ -60,7 +62,9 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.dial_player_list = None
         self.dial_add_player = None
         self.dial_new_tournament = None
-
+        self.dials = [self.dial_player_list,
+                      self.dial_add_player,
+                      self.dial_new_tournament]
 
         # Tournament
         self.isTournament = False
@@ -70,6 +74,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         # Toolbar actions:
         self.act_add_player = QtGui.QIcon()
         self.act_list = QtGui.QIcon()
+        self.act_sort = QtGui.QIcon()
 
         self.setup()
         self.update()
@@ -89,9 +94,9 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.toolBar.setDisabled(True)
             self.actionSave.setDisabled(True)
 
-        self.dials=[self.dial_player_list,
-                    self.dial_add_player,
-                    self.dial_new_tournament]
+        self.dials = [self.dial_player_list,
+                      self.dial_add_player,
+                      self.dial_new_tournament]
 
     def close_all_dial_and_clear(self):
         for i in self.dials:
@@ -114,6 +119,12 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.act_list = QtGui.QAction(QtGui.QIcon("Graph\icList.png"), "show list", self)
         self.toolBar.addAction(self.act_list)
         self.act_list.triggered.connect(self.act_list_clicked)
+
+        #Sort
+        self.act_sort = QtGui.QAction(QtGui.QIcon("Graph\icSort.png"), "sort list by rank", self)
+        self.toolBar.addAction(self.act_sort)
+        self.act_sort.triggered.connect(self.act_sort_clicked)
+
 
     def add_to_list(self, list_of_string):
         for i in list_of_string:
@@ -143,13 +154,13 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
     def act_add_player_clicked(self):
 
         if self.dial_add_player is None:
-            self.dial_add_player = ChildAddPlayer(self.btn_ok_dial_add_player_clicked,
-                                                  self.btn_cancel_dial_add_player_clicked)
+            self.dial_add_player = ChildAddPlayer(self.btn_add_dial_add_player_clicked,
+                                                  self.btn_ok_dial_add_player_clicked)
         try:
             self.dial_add_player.show()
         except RuntimeError:
-            self.dial_add_player = ChildAddPlayer(self.btn_ok_dial_add_player_clicked,
-                                                  self.btn_cancel_dial_add_player_clicked)
+            self.dial_add_player = ChildAddPlayer(self.btn_add_dial_add_player_clicked,
+                                                  self.btn_ok_dial_add_player_clicked)
             self.dial_add_player.show()
 
     def act_list_clicked(self):
@@ -168,7 +179,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 self.set_table_widget(self.T.all_players, self.dial_player_list.player_list)
             self.dial_player_list.showMaximized()
 
-    def btn_ok_dial_add_player_clicked(self):
+    def btn_add_dial_add_player_clicked(self):
         first = self.dial_add_player.edit_first.text()
         last = self.dial_add_player.edit_last.text()
         try:
@@ -178,13 +189,16 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
         if not (first == '' or last == '' or elo > 3000):
             self.T.add_player(first, last, elo)
+            self.dial_add_player.edit_first.setText('')
+            self.dial_add_player.edit_last.setText('')
+            self.dial_add_player.edit_elo.setText('')
+            self.dial_add_player.label_status.setText('Added correctly.')
             self.update()
-            self.dial_add_player.close()
 
         if self.dial_player_list is not None:
             self.set_table_widget(self.T.all_players, self.dial_player_list.player_list)
 
-    def btn_cancel_dial_add_player_clicked(self):
+    def btn_ok_dial_add_player_clicked(self):
         self.dial_add_player.close()
         self.update()
 
@@ -220,6 +234,11 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 self.T.to_xml(file_name)
         self.update()
 
+    def act_sort_clicked(self):
+        self.T.sort_by_rank()
+        self.T.set_rank()
+        if self.dial_player_list is not None:
+            self.set_table_widget(self.T.all_players, self.dial_player_list.player_list)
 
 if __name__ == '__main__':
     # t = mainClasses.Tournament()

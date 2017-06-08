@@ -64,8 +64,8 @@ class Tournament:
     def delete_all_players(self):
         self.all_players = []
 
-    def sort_by_rank(self, players):
-        return sorted(players, key=lambda player: player.elo).reverse()
+    def sort_by_rank(self):
+        self.all_players = sorted(self.all_players, key=lambda x: x.elo, reverse=True)
 
     def sort_by_id(self, players):
         return sorted(players, key=lambda player: player.id)
@@ -73,8 +73,8 @@ class Tournament:
     def print_players(self, players):
         [print(player) for player in players]
 
-    def set_a_rank(self, players_list):
-        for i, player in enumerate(players_list):
+    def set_rank(self):
+        for i, player in enumerate(self.all_players):
             player.rank = i + 1
 
     def to_xml(self, xml_file_path):
