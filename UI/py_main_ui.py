@@ -48,7 +48,13 @@ class Ui_MainWindow(object):
         MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
         self.actionNew_tournament = QtGui.QAction(MainWindow)
         self.actionNew_tournament.setObjectName(_fromUtf8("actionNew_tournament"))
+        self.actionOpen = QtGui.QAction(MainWindow)
+        self.actionOpen.setObjectName(_fromUtf8("actionOpen"))
+        self.actionSave = QtGui.QAction(MainWindow)
+        self.actionSave.setObjectName(_fromUtf8("actionSave"))
         self.menuFile.addAction(self.actionNew_tournament)
+        self.menuFile.addAction(self.actionOpen)
+        self.menuFile.addAction(self.actionSave)
         self.menubar.addAction(self.menuFile.menuAction())
 
         self.retranslateUi(MainWindow)
@@ -59,4 +65,6 @@ class Ui_MainWindow(object):
         self.menuFile.setTitle(_translate("MainWindow", "File", None))
         self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar", None))
         self.actionNew_tournament.setText(_translate("MainWindow", "New tournament", None))
+        self.actionOpen.setText(_translate("MainWindow", "Open", None))
+        self.actionSave.setText(_translate("MainWindow", "Save", None))
 

@@ -42,11 +42,14 @@ class Player:
 
 class Tournament:
     def __init__(self, name='Example of tournament', current_round=0 ):
-        print("You have just created new tournament: " + name)
         self.name = name
         self.all_players = []
         self.present_players = []
         self.round = current_round
+
+    def add_player(self, first, last, elo):
+        id_p = len(self.all_players)+1
+        self.all_players.append(Player(first, last, elo, p_id=id_p))
 
     def import_player_list_from_file(self, file_path):
         f = open(file_path, 'r')
@@ -90,20 +93,24 @@ class Tournament:
         tree.write(xml_file_path)
 
     def from_xml(self, xml_file_path):
-        tree = ET.parse(xml_file_path)
-        root = tree.getroot()
+        try:
+            tree = ET.parse(xml_file_path)
+            root = tree.getroot()
 
-        self.name = root.find("name").text
-        self.round = int(root.find("round").text)
-        pl = root.find('players')
-        for i in pl.findall("Player"):
-            self.all_players.append(Player(first_name=i.find("first_name").text,
-                                           last_name=i.find("last_name").text,
-                                           elo=int(i.find("elo").text),
-                                           rank=int(i.find("rank").text),
-                                           p_id=int(i.find("id").text),
-                                           last_opponent=int(i.find("last_opponent").text)))
-        self.print_players(self.all_players)
+            self.name = root.find("name").text
+            self.round = int(root.find("round").text)
+            pl = root.find('players')
+            for i in pl.findall("Player"):
+                self.all_players.append(Player(first_name=i.find("first_name").text,
+                                               last_name=i.find("last_name").text,
+                                               elo=int(i.find("elo").text),
+                                               rank=int(i.find("rank").text),
+                                               p_id=int(i.find("id").text),
+                                               last_opponent=int(i.find("last_opponent").text)))
+            self.print_players(self.all_players)
+            return True
+        except:
+            return False
 
     def prepare_to_fight(self):
         self.present_players = self.all_players

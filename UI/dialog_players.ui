@@ -16,8 +16,14 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" colspan="2">
     <widget class="QTableWidget" name="player_list">
+     <property name="selectionMode">
+      <enum>QAbstractItemView::ExtendedSelection</enum>
+     </property>
      <property name="textElideMode">
       <enum>Qt::ElideMiddle</enum>
+     </property>
+     <property name="verticalScrollMode">
+      <enum>QAbstractItemView::ScrollPerItem</enum>
      </property>
     </widget>
    </item>

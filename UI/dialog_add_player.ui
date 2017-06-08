@@ -40,7 +40,7 @@
    <property name="title">
     <string>Dane</string>
    </property>
-   <widget class="QLineEdit" name="lineEdit_10">
+   <widget class="QLineEdit" name="edit_elo">
     <property name="geometry">
      <rect>
       <x>70</x>
@@ -50,7 +50,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_9">
+   <widget class="QLineEdit" name="edit_first">
     <property name="geometry">
      <rect>
       <x>70</x>
@@ -73,7 +73,7 @@
      <string>Ranking:</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QLineEdit" name="edit_last">
     <property name="geometry">
      <rect>
       <x>70</x>
