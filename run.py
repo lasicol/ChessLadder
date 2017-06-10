@@ -4,7 +4,7 @@ from UI.py_dialog_players_ui import Ui_dial_list
 from UI.py_dialog_add_player_ui import Ui_dial_add_player
 from UI.py_dialog_new_tournament_ui import Ui_dial_new_tournament
 from UI.py_dialog_make_pair_ui import Ui_dial_make_pair
-from PyQt4 import QtGui, Qt, QtCore
+from PyQt4 import QtGui, QtCore
 import sys
 
 
@@ -76,13 +76,16 @@ class ChildMakePair(QtGui.QDialog, Ui_dial_make_pair):
         item = self.listWidget_all.takeItem(self.listWidget_all.currentRow())
         if item is not None:
             self.listWidget_selected.addItem(item.text())
-            item = None # remove from listWidget_all
+            # remove from listWidget_all
+            item = None
 
     def btn_move_left_clicked(self):
         item = self.listWidget_selected.takeItem(self.listWidget_selected.currentRow())
         if item is not None:
             self.listWidget_all.addItem(item.text())
-            item = None # remove from listWidget_all
+            # remove from listWidget_selected
+            item = None
+
 
 class MyApp(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -132,6 +135,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                       self.dial_add_player,
                       self.dial_new_tournament]
 
+    # noinspection PyBroadException
     def close_all_dial_and_clear(self):
         for i in self.dials:
             if i is not None:
@@ -147,28 +151,29 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         # Add player
         self.act_add_player = QtGui.QAction(QtGui.QIcon("Graph\icAddUser.png"), "new user", self)
         self.toolBar.addAction(self.act_add_player)
-        self.act_add_player.triggered.connect(self.act_add_player_clicked)
+        QtGui.QAction.connect(self.act_add_player, QtCore.SIGNAL('triggered()'), self.act_add_player_clicked)
 
         # List
         self.act_list = QtGui.QAction(QtGui.QIcon("Graph\icList.png"), "show list", self)
         self.toolBar.addAction(self.act_list)
-        self.act_list.triggered.connect(self.act_list_clicked)
+        QtGui.QAction.connect(self.act_list, QtCore.SIGNAL('triggered()'), self.act_list_clicked)
 
-        #Sort
+        # Sort
         self.act_sort = QtGui.QAction(QtGui.QIcon("Graph\icSort.png"), "sort list by rank", self)
         self.toolBar.addAction(self.act_sort)
-        self.act_sort.triggered.connect(self.act_sort_clicked)
+        QtGui.QAction.connect(self.act_sort, QtCore.SIGNAL('triggered()'), self.act_sort_clicked)
 
         # Make pair
         self.act_make_pair = QtGui.QAction(QtGui.QIcon("Graph\icHandshake.png"), "make a pair", self)
         self.toolBar.addAction(self.act_make_pair)
-        self.act_make_pair.triggered.connect(self.act_make_pair_clicked)
+        QtGui.QAction.connect(self.act_make_pair, QtCore.SIGNAL('triggered()'), self.act_make_pair_clicked)
 
     def add_to_list(self, list_of_string):
         for i in list_of_string:
             self.listWidget.addItem(i.str_with_rank())
 
-    def set_table_widget(self, list_, table_widget):
+    @staticmethod
+    def set_table_widget(list_, table_widget):
         table_widget.setRowCount(100)
         table_widget.setColumnCount(5)
         table_widget.setHorizontalHeaderLabels(['ID', 'RANK', 'FIRST NAME', 'LAST NAME', 'ELO'])
@@ -270,14 +275,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
         # [print(x) for x in self.T.present_players]
 
-
     def btn_cancel_dial_make_pair_clicked(self):
         pass
-
-    def btn_cancel_dial_new_tournament_clicked(self):
-        self.dial_new_tournament = None
-        self.update()
-
 
     def act_open_clicked(self):
         self.opened_file = QtGui.QFileDialog.getOpenFileName(self, 'Open file', 'c:\\', "Xml file(*.xml)")
