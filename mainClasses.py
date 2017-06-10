@@ -64,8 +64,10 @@ class Tournament:
     def delete_all_players(self):
         self.all_players = []
 
-    def sort_by_rank(self):
-        self.all_players = sorted(self.all_players, key=lambda x: x.elo, reverse=True)
+    def sort_by_rank(self, p_list):
+        return sorted(p_list, key=lambda x: x.elo, reverse=True)
+
+
 
     def sort_by_id(self, players):
         return sorted(players, key=lambda player: player.id)
@@ -139,8 +141,32 @@ class Tournament:
                 print("There is no such an id...")
             print("=============================================================")
 
-    def make_pair(self):
-        pass
+    def make_pair(self, selected_players):
+        white = []
+        black = []
+        if self.round == 1:
+            for i, player in enumerate(selected_players):
+                if i % 2:
+                    white.append(player)
+                else:
+                    black.append(player)
+
+    def get_player_by_id(self, pid):
+        ppl = None
+        if pid is int:
+            for player in self.all_players:
+                if player.id == pid:
+                    ppl = player
+                    break
+        else:
+            for player in self.all_players:
+                if str(player.id) == pid:
+                    ppl = player
+                    break
+        if ppl is None:
+            return False
+        else:
+            return ppl
 
 if __name__ == "__main__":
     t = Tournament()
