@@ -29,7 +29,7 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QSpinBox" name="spinBox">
+  <widget class="QSpinBox" name="num_round">
    <property name="geometry">
     <rect>
      <x>170</x>
@@ -52,7 +52,7 @@
     <string>Round:</string>
    </property>
   </widget>
-  <widget class="QListWidget" name="listWidget_all">
+  <widget class="QListWidget" name="listWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -62,7 +62,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QPushButton" name="btn_moveRight">
+  <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
      <x>210</x>
@@ -75,7 +75,7 @@
     <string>&gt;&gt;</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="btn_moveLeft">
+  <widget class="QPushButton" name="pushButton_2">
    <property name="geometry">
     <rect>
      <x>210</x>
@@ -88,7 +88,7 @@
     <string>&lt;&lt;</string>
    </property>
   </widget>
-  <widget class="QListWidget" name="listWidget_selected">
+  <widget class="QListView" name="listView">
    <property name="geometry">
     <rect>
      <x>250</x>

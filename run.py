@@ -260,6 +260,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.update()
 
     def btn_ok_dial_make_pair_clicked(self):
+        [print(hex(id(i.list_of_opponents))) for i in self.T.all_players]
         items = []
         for index in range(self.dial_make_pair.listWidget_selected.count()):
             items.append(self.dial_make_pair.listWidget_selected.item(index).text())
@@ -272,8 +273,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             if ppl:
                 selected_players.append(self.T.get_player_by_id(player_id))
         self.T.present_players = self.T.sort_by_rank(selected_players)
-
-        # [print(x) for x in self.T.present_players]
+        self.T.make_pair(self.T.present_players)
 
     def btn_cancel_dial_make_pair_clicked(self):
         pass

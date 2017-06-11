@@ -6,7 +6,7 @@ class Player:
     """" The class which is describing player object"""
     id = 0
 
-    def __init__(self, first_name, last_name, elo, rank=0, p_id=0, last_opponent=0, list_of_opponents=None):
+    def __init__(self, first_name, last_name, elo, rank=0, p_id=0, last_opponent=0):
         self.first_name = first_name
         self.last_name = last_name
         self.elo = int(elo)
@@ -17,7 +17,12 @@ class Player:
         else:
             self.id = p_id
         self.last_opponent = last_opponent
-        self.list_of_opponents = list_of_opponents
+        self.last_colour = ""
+        self.list_of_opponents = [0]
+        self.lista = list([1])
+
+    def add_opponent(self, pid):
+        self.list_of_opponents.append(pid)
 
     def __str__(self):
         return str(self.id) + ".   " + self.first_name + ", " + self.last_name + ", " + str(self.elo)
@@ -66,8 +71,6 @@ class Tournament:
 
     def sort_by_rank(self, p_list):
         return sorted(p_list, key=lambda x: x.elo, reverse=True)
-
-
 
     def sort_by_id(self, players):
         return sorted(players, key=lambda player: player.id)
@@ -141,15 +144,36 @@ class Tournament:
                 print("There is no such an id...")
             print("=============================================================")
 
-    def make_pair(self, selected_players):
+    def make_pair(self, selected_players: list()):
+
         white = []
         black = []
-        if self.round == 1:
-            for i, player in enumerate(selected_players):
-                if i % 2:
-                    white.append(player)
-                else:
-                    black.append(player)
+        paired = []
+        size_selected_player = len(selected_players)
+        copy_list = list(selected_players)
+        while 1:
+            ppl_1 = copy_list[0]
+
+            for p in copy_list[1:]:
+                if p.list_of_opponents[0] != ppl_1.list_of_opponents[0] or p.list_of_opponents[0] == 0:
+                    print (p)
+                    org_player1 = self.get_player_by_id(str(ppl_1.id))
+                    org_player2 = self.get_player_by_id(str(p.id))
+                    if org_player1 and org_player2:
+                        org_player1.add_opponent(org_player2.id)
+                        org_player2.add_opponent(org_player1.id)
+                    copy_list.remove(ppl_1)
+                    copy_list.remove(p)
+                    break
+            [print(i) for i in copy_list]
+            print('------------------')
+
+            if len(copy_list) == size_selected_player:
+                break
+            else:
+                size_selected_player = len(copy_list)
+        [print(i.list_of_opponents) for i in self.present_players]
+
 
     def get_player_by_id(self, pid):
         ppl = None
