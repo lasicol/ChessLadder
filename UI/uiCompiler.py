@@ -29,3 +29,4 @@ if __name__ == '__main__':
     CUiCompiler('dialog_add_player', 'py_dialog_add_player_ui').compile()
     CUiCompiler('dialog_new_tournament', 'py_dialog_new_tournament_ui').compile()
     CUiCompiler('dialog_make_pair', 'py_dialog_make_pair_ui').compile()
+    CUiCompiler('dialog_round', 'py_dialog_round_ui').compile()
