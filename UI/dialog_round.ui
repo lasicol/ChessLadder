@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>dial_round</class>
+ <widget class="QDialog" name="dial_round">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>847</width>
+    <height>700</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QTableWidget" name="table_paired_players">
+     <property name="columnCount">
+      <number>4</number>
+     </property>
+     <column>
+      <property name="text">
+       <string>No.</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>White player</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Result</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Black player</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
