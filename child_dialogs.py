@@ -99,12 +99,18 @@ class ChildRound(QtGui.QDialog, Ui_dial_round):
 
 
 class ChildInputResults(QtGui.QDialog, Ui_dial_input_results):
-    def __init__(self):
+    def __init__(self, fun_btn_ok, fun_btn_cancel):
         super(ChildInputResults, self).__init__(None)
         self.setupUi(self)
+
+        self.fun_btn_ok = fun_btn_ok
+        self.fun_btn_cancel = fun_btn_cancel
         self.setup()
 
     def setup(self):
+        self.buttonBox.accepted.connect(self.fun_btn_ok)
+        self.buttonBox.rejected.connect(self.fun_btn_cancel)
+
         self.btBlackWin.clicked.connect(self.btn_black_win_clicked)
         self.btBlackWin.setShortcut("C")
 
@@ -134,3 +140,7 @@ class ChildInputResults(QtGui.QDialog, Ui_dial_input_results):
         self.table_paired_players_input.selectRow(r)
         self.table_paired_players_input.setItem(r, 2, QtGui.QTableWidgetItem("0.5-0.5"))
         self.table_paired_players_input.selectRow(r + 1)
+
+    def accept(self):
+        pass
+

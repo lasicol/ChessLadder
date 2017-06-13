@@ -107,7 +107,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.listWidget.addItem(i.str_with_rank())
 
     @staticmethod
-    def set_table_widget(list_, table_widget):
+    def set_list_table_widget(list_, table_widget):
         table_widget.setRowCount(100)
         table_widget.setColumnCount(5)
         table_widget.setHorizontalHeaderLabels(['ID', 'RANK', 'FIRST NAME', 'LAST NAME', 'ELO'])
@@ -122,6 +122,16 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             table_widget.setItem(i, 4, QtGui.QTableWidgetItem(str(ppl.elo)))
             # item = QtGui.QTableWidgetItem("lody")
             # self.tableWidget.setItem(1,0,item)
+
+    def set_round_table_widget(self, list_, table_widget):
+        table_widget.setRowCount(len(list_))
+        table_widget.setColumnCount(4)
+
+        table_widget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+        for i, ppl in enumerate(list_):
+            table_widget.setItem(i, 0, QtGui.QTableWidgetItem(str(self.T.get_player_by_id(list_[i][0]))))
+            table_widget.setItem(i, 1, QtGui.QTableWidgetItem("-:-"))
+            table_widget.setItem(i, 2, QtGui.QTableWidgetItem(str(self.T.get_player_by_id(list_[i][1]))))
 
     def act_new_tournament_clicked(self):
         if self.dial_new_tournament is None:
@@ -146,7 +156,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.dial_player_list = ChildPlayerList()
             self.mdiArea.addSubWindow(self.dial_player_list)
             if self.T is not None:
-                self.set_table_widget(self.T.all_players, self.dial_player_list.player_list)
+                self.set_list_table_widget(self.T.all_players, self.dial_player_list.player_list)
         try:
             self.dial_player_list.showMaximized()
         except RuntimeError:
@@ -154,7 +164,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.mdiArea.addSubWindow(self.dial_player_list)
             # self.dial_player_list.setWindowState(QtCore.Qt.WindowMaximized)
             if self.T is not None:
-                self.set_table_widget(self.T.all_players, self.dial_player_list.player_list)
+                self.set_list_table_widget(self.T.all_players, self.dial_player_list.player_list)
             self.dial_player_list.showMaximized()
 
     def btn_add_dial_add_player_clicked(self):
@@ -174,7 +184,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             self.update()
 
         if self.dial_player_list is not None:
-            self.set_table_widget(self.T.all_players, self.dial_player_list.player_list)
+            self.set_list_table_widget(self.T.all_players, self.dial_player_list.player_list)
 
     def btn_ok_dial_add_player_clicked(self):
         self.dial_add_player.close()
@@ -213,6 +223,12 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
     def btn_cancel_dial_make_pair_clicked(self):
         pass
 
+    def btn_ok_dial_input_results_clicked(self):
+        pass
+
+    def btn_cancel_dial_input_results_clicked(self):
+        pass
+
     def act_open_clicked(self):
         self.opened_file = QtGui.QFileDialog.getOpenFileName(self, 'Open file', 'c:\\', "Xml file(*.xml)")
         if self.opened_file:
@@ -235,7 +251,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.T.all_players = self.T.sort_by_rank(self.T.all_players)
         self.T.set_rank()
         if self.dial_player_list is not None:
-            self.set_table_widget(self.T.all_players, self.dial_player_list.player_list)
+            self.set_list_table_widget(self.T.all_players, self.dial_player_list.player_list)
 
     def act_make_pair_clicked(self):
         self.dial_make_pair = ChildMakePair(self.btn_ok_dial_make_pair_clicked, self.btn_cancel_dial_make_pair_clicked)
@@ -247,21 +263,14 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         if self.dial_round is not ChildRound:
             self.dial_round = ChildRound()
             self.mdiArea.addSubWindow(self.dial_round)
-            self.set_table_widget(self.T.all_players,self.dial_round.table_paired_players)
+            self.set_round_table_widget(self.T.all_players, self.dial_round.table_paired_players)
         self.dial_round.showMaximized()
-        # try:
-        #     self.dial_round.showMaximized()
-        # except RuntimeError:
-        #     self.dial_round = ChildRound()
-        #     self.mdiArea.addSubWindow(self.dial_round)
-        #     # if self.T is not None:
-        #     #     self.set_table_widget(self.T.all_players, self.dial_player_list.player_list)
-        #     self.dial_round.showMaximized()
 
     def act_input_results_clicked(self):
-        self.dial_input_results = ChildInputResults()
+        self.dial_input_results = ChildInputResults(self.btn_ok_dial_input_results_clicked,
+                                                    self.btn_cancel_dial_input_results_clicked)
         self.dial_input_results.show()
-        self.set_table_widget(self.T.all_players, self.dial_input_results.table_paired_players_input)
+        self.set_round_table_widget(self.T.paired, self.dial_input_results.table_paired_players_input)
 
 
 

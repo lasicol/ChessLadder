@@ -53,6 +53,7 @@ class Tournament:
         self.all_players = []
         self.present_players = []
         self.round = current_round
+        self.paired = []
 
     def add_player(self, first, last, elo):
         id_p = len(self.all_players)+1
@@ -153,7 +154,7 @@ class Tournament:
 
         white = []
         black = []
-        paired = []
+        self.paired = []
         size_selected_player = len(selected_players)
         copy_list = list(selected_players)
         while 1:
@@ -165,18 +166,17 @@ class Tournament:
                     if org_player1 and org_player2:
                         org_player1.add_opponent(org_player2.id)
                         org_player2.add_opponent(org_player1.id)
-                        paired.append([org_player1.id, org_player2.id])
+                        self.paired.append([org_player1.id, org_player2.id])
                     copy_list.remove(ppl_1)
                     copy_list.remove(p)
                     break
             # [print(i) for i in copy_list]
             # print('------------------')
-            print(paired)
+            print(self.paired)
             if len(copy_list) == size_selected_player:
                 break
             else:
                 size_selected_player = len(copy_list)
-        return paired
 
     def get_player_by_id(self, pid):
         ppl = None
