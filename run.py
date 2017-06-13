@@ -1,6 +1,6 @@
 import mainClasses
 from UI.py_main_ui import Ui_MainWindow
-from child_dialogs import ChildAddPlayer, ChildMakePair, ChildNewTournament, ChildPlayerList, ChildRound
+from child_dialogs import *
 from PyQt4 import QtGui, QtCore
 import sys
 
@@ -17,6 +17,8 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.dial_new_tournament = None
         self.dial_make_pair = QtGui.QDialog()
         self.dial_round = QtGui.QDialog()
+        self.dial_input_results = QtGui.QDialog()
+
         self.dials = [self.dial_player_list,
                       self.dial_add_player,
                       self.dial_new_tournament,
@@ -33,6 +35,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.act_sort = QtGui.QIcon()
         self.act_make_pair = QtGui.QIcon()
         self.act_round = QtGui.QIcon()
+        self.act_input_results = QtGui.QIcon()
 
         self.setup()
         self.update()
@@ -93,6 +96,11 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.act_round = QtGui.QAction(QtGui.QIcon("Graph\icPair.png"), "round", self)
         self.toolBar.addAction(self.act_round)
         QtGui.QAction.connect(self.act_round, QtCore.SIGNAL('triggered()'), self.act_round_clicked)
+
+        # Input results
+        self.act_input_results = QtGui.QAction(QtGui.QIcon("Graph\icNotebook.png"), "Input results", self)
+        self.toolBar.addAction(self.act_input_results)
+        QtGui.QAction.connect(self.act_input_results, QtCore.SIGNAL('triggered()'), self.act_input_results_clicked)
 
     def add_to_list(self, list_of_string):
         for i in list_of_string:
@@ -236,8 +244,26 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.dial_make_pair.show()
 
     def act_round_clicked(self):
-        self.dial_round = ChildRound()
-        self.dial_round.show()
+        if self.dial_round is not ChildRound:
+            self.dial_round = ChildRound()
+            self.mdiArea.addSubWindow(self.dial_round)
+            self.set_table_widget(self.T.all_players,self.dial_round.table_paired_players)
+        self.dial_round.showMaximized()
+        # try:
+        #     self.dial_round.showMaximized()
+        # except RuntimeError:
+        #     self.dial_round = ChildRound()
+        #     self.mdiArea.addSubWindow(self.dial_round)
+        #     # if self.T is not None:
+        #     #     self.set_table_widget(self.T.all_players, self.dial_player_list.player_list)
+        #     self.dial_round.showMaximized()
+
+    def act_input_results_clicked(self):
+        self.dial_input_results = ChildInputResults()
+        self.dial_input_results.show()
+        self.set_table_widget(self.T.all_players, self.dial_input_results.table_paired_players_input)
+
+
 
 if __name__ == '__main__':
     # t = mainClasses.Tournament()

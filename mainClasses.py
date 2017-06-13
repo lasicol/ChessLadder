@@ -160,8 +160,8 @@ class Tournament:
             ppl_1 = copy_list[0]
             for p in copy_list[1:]:
                 if p.list_of_opponents[0] != ppl_1.list_of_opponents[0] or p.list_of_opponents[0] == 0:
-                    org_player1 = self.get_player_by_id(str(ppl_1.id))
-                    org_player2 = self.get_player_by_id(str(p.id))
+                    org_player1 = self.get_player_by_id(ppl_1.id)
+                    org_player2 = self.get_player_by_id(p.id)
                     if org_player1 and org_player2:
                         org_player1.add_opponent(org_player2.id)
                         org_player2.add_opponent(org_player1.id)
@@ -178,10 +178,9 @@ class Tournament:
                 size_selected_player = len(copy_list)
         return paired
 
-
     def get_player_by_id(self, pid):
         ppl = None
-        if pid is int:
+        if type(pid) is int:
             for player in self.all_players:
                 if player.id == pid:
                     ppl = player

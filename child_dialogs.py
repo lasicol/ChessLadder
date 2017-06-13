@@ -3,7 +3,8 @@ from UI.py_dialog_add_player_ui import Ui_dial_add_player
 from UI.py_dialog_new_tournament_ui import Ui_dial_new_tournament
 from UI.py_dialog_make_pair_ui import Ui_dial_make_pair
 from UI.py_dialog_round_ui import Ui_dial_round
-from PyQt4 import QtGui, QtCore
+from UI.py_dialog_input_results_ui import Ui_dial_input_results
+from PyQt4 import QtGui, QtCore, Qt
 
 
 class ChildPlayerList(QtGui.QDialog, Ui_dial_list):
@@ -91,4 +92,45 @@ class ChildRound(QtGui.QDialog, Ui_dial_round):
     def __init__(self):
         super(ChildRound, self).__init__(None)
         self.setupUi(self)
+        self.setup()
 
+    def setup(self):
+        pass
+
+
+class ChildInputResults(QtGui.QDialog, Ui_dial_input_results):
+    def __init__(self):
+        super(ChildInputResults, self).__init__(None)
+        self.setupUi(self)
+        self.setup()
+
+    def setup(self):
+        self.btBlackWin.clicked.connect(self.btn_black_win_clicked)
+        self.btBlackWin.setShortcut("C")
+
+        self.btWhiteWin.clicked.connect(self.btn_white_win_clicked)
+        self.btWhiteWin.setShortcut("Z")
+
+        self.btDraw.clicked.connect(self.btn_draw_clicked)
+        self.btDraw.setShortcut("X")
+
+        r = self.table_paired_players_input.currentRow()
+        self.table_paired_players_input.selectRow(r)
+
+    def btn_black_win_clicked(self):
+        r = self.table_paired_players_input.currentRow()
+        self.table_paired_players_input.selectRow(r)
+        self.table_paired_players_input.setItem(r, 2, QtGui.QTableWidgetItem("0-1"))
+        self.table_paired_players_input.selectRow(r+1)
+
+    def btn_white_win_clicked(self):
+        r = self.table_paired_players_input.currentRow()
+        self.table_paired_players_input.selectRow(r)
+        self.table_paired_players_input.setItem(r, 2, QtGui.QTableWidgetItem("1-0"))
+        self.table_paired_players_input.selectRow(r+1)
+
+    def btn_draw_clicked(self):
+        r = self.table_paired_players_input.currentRow()
+        self.table_paired_players_input.selectRow(r)
+        self.table_paired_players_input.setItem(r, 2, QtGui.QTableWidgetItem("0.5-0.5"))
+        self.table_paired_players_input.selectRow(r + 1)
