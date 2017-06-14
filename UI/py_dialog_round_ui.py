@@ -29,7 +29,7 @@ class Ui_dial_round(object):
         self.gridLayout = QtGui.QGridLayout(dial_round)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
         self.table_paired_players = QtGui.QTableWidget(dial_round)
-        self.table_paired_players.setColumnCount(4)
+        self.table_paired_players.setColumnCount(3)
         self.table_paired_players.setObjectName(_fromUtf8("table_paired_players"))
         self.table_paired_players.setRowCount(0)
         item = QtGui.QTableWidgetItem()
@@ -38,8 +38,6 @@ class Ui_dial_round(object):
         self.table_paired_players.setHorizontalHeaderItem(1, item)
         item = QtGui.QTableWidgetItem()
         self.table_paired_players.setHorizontalHeaderItem(2, item)
-        item = QtGui.QTableWidgetItem()
-        self.table_paired_players.setHorizontalHeaderItem(3, item)
         self.gridLayout.addWidget(self.table_paired_players, 0, 0, 1, 1)
 
         self.retranslateUi(dial_round)
@@ -48,11 +46,9 @@ class Ui_dial_round(object):
     def retranslateUi(self, dial_round):
         dial_round.setWindowTitle(_translate("dial_round", "Dialog", None))
         item = self.table_paired_players.horizontalHeaderItem(0)
-        item.setText(_translate("dial_round", "No.", None))
-        item = self.table_paired_players.horizontalHeaderItem(1)
         item.setText(_translate("dial_round", "White player", None))
-        item = self.table_paired_players.horizontalHeaderItem(2)
+        item = self.table_paired_players.horizontalHeaderItem(1)
         item.setText(_translate("dial_round", "Result", None))
-        item = self.table_paired_players.horizontalHeaderItem(3)
+        item = self.table_paired_players.horizontalHeaderItem(2)
         item.setText(_translate("dial_round", "Black player", None))
 

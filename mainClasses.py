@@ -178,6 +178,10 @@ class Tournament:
             else:
                 size_selected_player = len(copy_list)
 
+        self.round += 1
+        [self.paired.append(i.id) for i in copy_list]
+        print(self.paired)
+
     def get_player_by_id(self, pid):
         ppl = None
         if type(pid) is int:

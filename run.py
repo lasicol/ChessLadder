@@ -125,13 +125,17 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
     def set_round_table_widget(self, list_, table_widget):
         table_widget.setRowCount(len(list_))
-        table_widget.setColumnCount(4)
+        table_widget.setColumnCount(3)
 
         table_widget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
         for i, ppl in enumerate(list_):
-            table_widget.setItem(i, 0, QtGui.QTableWidgetItem(str(self.T.get_player_by_id(list_[i][0]))))
-            table_widget.setItem(i, 1, QtGui.QTableWidgetItem("-:-"))
-            table_widget.setItem(i, 2, QtGui.QTableWidgetItem(str(self.T.get_player_by_id(list_[i][1]))))
+            if isinstance(list_[i], list):
+                table_widget.setItem(i, 0, QtGui.QTableWidgetItem(str(self.T.get_player_by_id(list_[i][0]))))
+                table_widget.setItem(i, 1, QtGui.QTableWidgetItem("-:-"))
+                table_widget.setItem(i, 2, QtGui.QTableWidgetItem(str(self.T.get_player_by_id(list_[i][1]))))
+            else:
+                table_widget.setItem(i, 0, QtGui.QTableWidgetItem(str(self.T.get_player_by_id(list_[i]))))
+
 
     def act_new_tournament_clicked(self):
         if self.dial_new_tournament is None:
@@ -220,6 +224,10 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.T.present_players = self.T.sort_by_rank(selected_players)
         self.T.make_pair(self.T.present_players)
 
+        self.act_round_clicked()
+
+
+
     def btn_cancel_dial_make_pair_clicked(self):
         pass
 
@@ -257,13 +265,14 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.dial_make_pair = ChildMakePair(self.btn_ok_dial_make_pair_clicked, self.btn_cancel_dial_make_pair_clicked)
         for i in self.T.all_players:
             self.dial_make_pair.listWidget_all.addItem(str(i))
+        self.dial_make_pair.num_round.setValue(self.T.round + 1)
         self.dial_make_pair.show()
 
     def act_round_clicked(self):
         if self.dial_round is not ChildRound:
             self.dial_round = ChildRound()
             self.mdiArea.addSubWindow(self.dial_round)
-            self.set_round_table_widget(self.T.all_players, self.dial_round.table_paired_players)
+            self.set_round_table_widget(self.T.paired, self.dial_round.table_paired_players)
         self.dial_round.showMaximized()
 
     def act_input_results_clicked(self):
@@ -271,7 +280,6 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                                                     self.btn_cancel_dial_input_results_clicked)
         self.dial_input_results.show()
         self.set_round_table_widget(self.T.paired, self.dial_input_results.table_paired_players_input)
-
 
 
 if __name__ == '__main__':

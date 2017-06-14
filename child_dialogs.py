@@ -126,19 +126,19 @@ class ChildInputResults(QtGui.QDialog, Ui_dial_input_results):
     def btn_black_win_clicked(self):
         r = self.table_paired_players_input.currentRow()
         self.table_paired_players_input.selectRow(r)
-        self.table_paired_players_input.setItem(r, 2, QtGui.QTableWidgetItem("0-1"))
+        self.table_paired_players_input.setItem(r, 1, QtGui.QTableWidgetItem("0-1"))
         self.table_paired_players_input.selectRow(r+1)
 
     def btn_white_win_clicked(self):
         r = self.table_paired_players_input.currentRow()
         self.table_paired_players_input.selectRow(r)
-        self.table_paired_players_input.setItem(r, 2, QtGui.QTableWidgetItem("1-0"))
+        self.table_paired_players_input.setItem(r, 1, QtGui.QTableWidgetItem("1-0"))
         self.table_paired_players_input.selectRow(r+1)
 
     def btn_draw_clicked(self):
         r = self.table_paired_players_input.currentRow()
         self.table_paired_players_input.selectRow(r)
-        self.table_paired_players_input.setItem(r, 2, QtGui.QTableWidgetItem("0.5-0.5"))
+        self.table_paired_players_input.setItem(r, 1, QtGui.QTableWidgetItem("0.5-0.5"))
         self.table_paired_players_input.selectRow(r + 1)
 
     def accept(self):
