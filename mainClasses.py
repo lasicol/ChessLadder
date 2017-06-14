@@ -74,8 +74,12 @@ class Tournament:
         self.all_players = []
 
     @staticmethod
-    def sort_by_rank(p_list):
+    def sort_by_elo(p_list):
         return sorted(p_list, key=lambda x: x.elo, reverse=True)
+
+    @staticmethod
+    def sort_by_rank(p_list):
+        return sorted(p_list, key=lambda x: x.rank)
 
     @staticmethod
     def sort_by_id(players):
@@ -161,7 +165,7 @@ class Tournament:
         while 1:
             ppl_1 = copy_list[0]
             for p in copy_list[1:]:
-                if p.list_of_opponents[0] != ppl_1.list_of_opponents[0] or p.list_of_opponents[0] == 0:
+                if p.list_of_opponents[-1] != ppl_1.id or p.list_of_opponents[-1] == 0:
                     org_player1 = self.get_player_by_id(ppl_1.id)
                     org_player2 = self.get_player_by_id(p.id)
                     if org_player1 and org_player2:
@@ -180,8 +184,10 @@ class Tournament:
                 size_selected_player = len(copy_list)
 
         self.round += 1
+
         [self.paired.append(i.id) for i in copy_list]
         print(self.paired)
+        self.results.append([-1]*(len(self.paired)))
 
     def get_player_by_id(self, pid):
         ppl = None

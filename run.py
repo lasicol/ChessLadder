@@ -131,7 +131,14 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         for i, ppl in enumerate(list_):
             if isinstance(list_[i], list):
                 table_widget.setItem(i, 0, QtGui.QTableWidgetItem(str(self.T.get_player_by_id(list_[i][0]))))
-                table_widget.setItem(i, 1, QtGui.QTableWidgetItem("-:-"))
+                if self.T.results[self.T.round-1][i] == -1:
+                    table_widget.setItem(i, 1, QtGui.QTableWidgetItem("-:-"))
+                elif self.T.results[self.T.round-1][i] == 1:
+                    table_widget.setItem(i, 1, QtGui.QTableWidgetItem("1-0"))
+                elif self.T.results[self.T.round-1][i] == 2:
+                    table_widget.setItem(i, 1, QtGui.QTableWIdgetItem("0.5-0.5"))
+                elif self.T.results[self.T.round-1][i] == 0:
+                    table_widget.setItem(i, 1, QtGui.QTableWidgetItem("0-1"))
                 table_widget.setItem(i, 2, QtGui.QTableWidgetItem(str(self.T.get_player_by_id(list_[i][1]))))
             else:
                 table_widget.setItem(i, 0, QtGui.QTableWidgetItem(str(self.T.get_player_by_id(list_[i]))))
@@ -225,6 +232,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.T.make_pair(self.T.present_players)
 
         self.act_round_clicked()
+        self.dial_make_pair.close()
 
 
 
@@ -240,7 +248,26 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         else:
             self.T.results.pop(self.T.round-1)
             self.T.results.insert(self.T.round-1, results)
-        print(self.T.results)
+
+        for i, result in enumerate(self.T.results[self.T.round-1]):
+            if isinstance(self.T.paired[i], list):
+                print("yuhu")
+                ppl1 = self.T.get_player_by_id(self.T.paired[i][0])
+                ppl2 = self.T.get_player_by_id(self.T.paired[i][1])
+                if result == 1:
+                    if ppl1.rank > ppl2.rank:
+                        ppl1.rank, ppl2.rank = ppl2.rank, ppl1.rank
+                    else:
+                        pass
+                elif result == 2:
+                    pass
+                elif result == 0:
+                    if ppl1.rank < ppl2.rank:
+                        ppl1.rank, ppl2.rank = ppl2.rank, ppl1.rank
+                    else:
+                        pass
+        self.T.all_players = self.T.sort_by_rank(self.T.all_players)
+        [print(x.rank) for x in self.T.all_players]
 
     def btn_cancel_dial_input_results_clicked(self):
             pass
@@ -264,7 +291,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.update()
 
     def act_sort_clicked(self):
-        self.T.all_players = self.T.sort_by_rank(self.T.all_players)
+        self.T.all_players = self.T.sort_by_elo(self.T.all_players)
         self.T.set_rank()
         if self.dial_player_list is not None:
             self.set_list_table_widget(self.T.all_players, self.dial_player_list.player_list)
