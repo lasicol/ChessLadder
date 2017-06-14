@@ -59,6 +59,10 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                       self.dial_add_player,
                       self.dial_new_tournament]
 
+        if self.T is not None:
+            if self.T.round > 0:
+                self.act_sort.setEnabled(False)
+
     # noinspection PyBroadException
     def close_all_dial_and_clear(self):
         for i in self.dials:
@@ -233,7 +237,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
         self.act_round_clicked()
         self.dial_make_pair.close()
-
+        self.update()
 
 
     def btn_cancel_dial_make_pair_clicked(self):
@@ -251,7 +255,6 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
 
         for i, result in enumerate(self.T.results[self.T.round-1]):
             if isinstance(self.T.paired[i], list):
-                print("yuhu")
                 ppl1 = self.T.get_player_by_id(self.T.paired[i][0])
                 ppl2 = self.T.get_player_by_id(self.T.paired[i][1])
                 if result == 1:
@@ -303,7 +306,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.dial_make_pair.num_round.setValue(self.T.round + 1)
         self.dial_make_pair.show()
 
-    def act_round_clicked(self):
+    def     act_round_clicked(self):
         if self.dial_round is not ChildRound:
             self.dial_round = ChildRound()
             self.mdiArea.addSubWindow(self.dial_round)

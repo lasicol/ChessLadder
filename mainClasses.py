@@ -155,45 +155,71 @@ class Tournament:
                 print("There is no such an id...")
             print("=============================================================")
 
+    def _swap(self, ppl1, ppl2):
+        print(ppl1, ppl2)
+        ranks = range(ppl1.rank-1, ppl2.rank-1)
+        print(ranks)
+        ppl2.rank = ppl1.rank
+        for i in ranks:
+            self.all_players[i].rank += 1
+
+    def _punishment(self, selected_players):
+        ppl1 = None
+        ppl2 = None
+        flag = True
+        for i, ppl in enumerate(self.all_players):
+            if ppl not in selected_players and flag:
+                ppl1 = ppl
+                flag = False
+            elif ppl in selected_players:
+                if not flag:
+                    ppl2 = ppl
+                    flag = True
+                    self._swap(ppl1, ppl2)
+
     def make_pair(self, selected_players: list()):
+        self._punishment(selected_players)
+        self.all_players = self.sort_by_rank(self.all_players)
 
-        white = []
-        black = []
-        self.paired = []
-        size_selected_player = len(selected_players)
-        copy_list = list(selected_players)
-        while 1:
-            if len(copy_list) == 0:
-                break
-            ppl_1 = copy_list[0]
-            i = 0
-            for p in copy_list[1:]:
-                if p.list_of_opponents[-1] != ppl_1.id or p.list_of_opponents[-1] == 0:
-                    org_player1 = self.get_player_by_id(ppl_1.id)
-                    org_player2 = self.get_player_by_id(p.id)
-                    if org_player1 and org_player2:
-                        org_player1.add_opponent(org_player2.id)
-                        org_player2.add_opponent(org_player1.id)
-                        self.paired.append([org_player1.id, org_player2.id])
-                    copy_list.remove(ppl_1)
-                    copy_list.remove(p)
-                    break
-                if i == 2:
-                    break
-                i += 1
-            # [print(i) for i in copy_list]
-            # print('------------------')
-            print(self.paired)
-            if len(copy_list) == size_selected_player:
-                break
-            else:
-                size_selected_player = len(copy_list)
 
-        self.round += 1
 
-        [self.paired.append(i.id) for i in copy_list]
-        print(self.paired)
-        self.results.append([-1]*(len(self.paired)))
+        # white = []
+        # black = []
+        # self.paired = []
+        # size_selected_player = len(selected_players)
+        # copy_list = list(selected_players)
+        # while 1:
+        #     if len(copy_list) == 0:
+        #         break
+        #     ppl_1 = copy_list[0]
+        #     i = 0
+        #     for p in copy_list[1:]:
+        #         if p.list_of_opponents[-1] != ppl_1.id or p.list_of_opponents[-1] == 0:
+        #             org_player1 = self.get_player_by_id(ppl_1.id)
+        #             org_player2 = self.get_player_by_id(p.id)
+        #             if org_player1 and org_player2:
+        #                 org_player1.add_opponent(org_player2.id)
+        #                 org_player2.add_opponent(org_player1.id)
+        #                 self.paired.append([org_player1.id, org_player2.id])
+        #             copy_list.remove(ppl_1)
+        #             copy_list.remove(p)
+        #             break
+        #         if i == 2:
+        #             break
+        #         i += 1
+        #     # [print(i) for i in copy_list]
+        #     # print('------------------')
+        #     print(self.paired)
+        #     if len(copy_list) == size_selected_player:
+        #         break
+        #     else:
+        #         size_selected_player = len(copy_list)
+        #
+        # self.round += 1
+        #
+        # [self.paired.append(i.id) for i in copy_list]
+        # print(self.paired)
+        # self.results.append([-1]*(len(self.paired)))
 
     def get_player_by_id(self, pid):
         ppl = None
