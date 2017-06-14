@@ -54,6 +54,7 @@ class Tournament:
         self.present_players = []
         self.round = current_round
         self.paired = []
+        self.results = []
 
     def add_player(self, first, last, elo):
         id_p = len(self.all_players)+1

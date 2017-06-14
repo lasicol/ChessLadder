@@ -5,7 +5,7 @@ from UI.py_dialog_make_pair_ui import Ui_dial_make_pair
 from UI.py_dialog_round_ui import Ui_dial_round
 from UI.py_dialog_input_results_ui import Ui_dial_input_results
 from PyQt4 import QtGui, QtCore, Qt
-
+from mainClasses import Tournament
 
 class ChildPlayerList(QtGui.QDialog, Ui_dial_list):
     def __init__(self):
@@ -103,6 +103,7 @@ class ChildInputResults(QtGui.QDialog, Ui_dial_input_results):
         super(ChildInputResults, self).__init__(None)
         self.setupUi(self)
 
+        self.results = [-1 for x in range(100)]
         self.fun_btn_ok = fun_btn_ok
         self.fun_btn_cancel = fun_btn_cancel
         self.setup()
@@ -120,6 +121,8 @@ class ChildInputResults(QtGui.QDialog, Ui_dial_input_results):
         self.btDraw.clicked.connect(self.btn_draw_clicked)
         self.btDraw.setShortcut("X")
 
+        self.btErase.clicked.connect(self.btn_erase_clicked)
+
         r = self.table_paired_players_input.currentRow()
         self.table_paired_players_input.selectRow(r)
 
@@ -128,18 +131,32 @@ class ChildInputResults(QtGui.QDialog, Ui_dial_input_results):
         self.table_paired_players_input.selectRow(r)
         self.table_paired_players_input.setItem(r, 1, QtGui.QTableWidgetItem("0-1"))
         self.table_paired_players_input.selectRow(r+1)
+        self.results.pop(r)
+        self.results.insert(r, 0)
 
     def btn_white_win_clicked(self):
         r = self.table_paired_players_input.currentRow()
         self.table_paired_players_input.selectRow(r)
         self.table_paired_players_input.setItem(r, 1, QtGui.QTableWidgetItem("1-0"))
         self.table_paired_players_input.selectRow(r+1)
+        self.results.pop(r)
+        self.results.insert(r, 1)
 
     def btn_draw_clicked(self):
         r = self.table_paired_players_input.currentRow()
         self.table_paired_players_input.selectRow(r)
         self.table_paired_players_input.setItem(r, 1, QtGui.QTableWidgetItem("0.5-0.5"))
         self.table_paired_players_input.selectRow(r + 1)
+        self.results.pop(r)
+        self.results.insert(r, 2)
+
+    def btn_erase_clicked(self):
+        r = self.table_paired_players_input.currentRow()
+        self.table_paired_players_input.selectRow(r)
+        self.table_paired_players_input.setItem(r, 1, QtGui.QTableWidgetItem("-:-"))
+        self.table_paired_players_input.selectRow(r + 1)
+        self.results.pop(r)
+        self.results.insert(r, -1)
 
     def accept(self):
         pass

@@ -232,10 +232,18 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         pass
 
     def btn_ok_dial_input_results_clicked(self):
-        pass
+        print(self.dial_input_results.results)
+        results = self.dial_input_results.results[:len(self.T.paired)]
+        print(results)
+        if len(self.T.results) < self.T.round:
+            self.T.results.append(results)
+        else:
+            self.T.results.pop(self.T.round-1)
+            self.T.results.insert(self.T.round-1, results)
+        print(self.T.results)
 
     def btn_cancel_dial_input_results_clicked(self):
-        pass
+            pass
 
     def act_open_clicked(self):
         self.opened_file = QtGui.QFileDialog.getOpenFileName(self, 'Open file', 'c:\\', "Xml file(*.xml)")
