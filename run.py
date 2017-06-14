@@ -136,7 +136,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 elif self.T.results[self.T.round-1][i] == 1:
                     table_widget.setItem(i, 1, QtGui.QTableWidgetItem("1-0"))
                 elif self.T.results[self.T.round-1][i] == 2:
-                    table_widget.setItem(i, 1, QtGui.QTableWIdgetItem("0.5-0.5"))
+                    table_widget.setItem(i, 1, QtGui.QTableWidgetItem("0.5-0.5"))
                 elif self.T.results[self.T.round-1][i] == 0:
                     table_widget.setItem(i, 1, QtGui.QTableWidgetItem("0-1"))
                 table_widget.setItem(i, 2, QtGui.QTableWidgetItem(str(self.T.get_player_by_id(list_[i][1]))))

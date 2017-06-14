@@ -163,7 +163,10 @@ class Tournament:
         size_selected_player = len(selected_players)
         copy_list = list(selected_players)
         while 1:
+            if len(copy_list) == 0:
+                break
             ppl_1 = copy_list[0]
+            i = 0
             for p in copy_list[1:]:
                 if p.list_of_opponents[-1] != ppl_1.id or p.list_of_opponents[-1] == 0:
                     org_player1 = self.get_player_by_id(ppl_1.id)
@@ -175,6 +178,9 @@ class Tournament:
                     copy_list.remove(ppl_1)
                     copy_list.remove(p)
                     break
+                if i == 2:
+                    break
+                i += 1
             # [print(i) for i in copy_list]
             # print('------------------')
             print(self.paired)
