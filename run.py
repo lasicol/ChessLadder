@@ -232,7 +232,11 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
             ppl = self.T.get_player_by_id(player_id)
             if ppl:
                 selected_players.append(self.T.get_player_by_id(player_id))
+
         self.T.present_players = self.T.sort_by_rank(selected_players)
+
+        self.T.round = int(self.dial_make_pair.num_round.value())
+
         self.T.make_pair(self.T.present_players)
 
         self.act_round_clicked()
@@ -258,17 +262,11 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
                 ppl1 = self.T.get_player_by_id(self.T.paired[i][0])
                 ppl2 = self.T.get_player_by_id(self.T.paired[i][1])
                 if result == 1:
-                    if ppl1.rank > ppl2.rank:
-                        ppl1.rank, ppl2.rank = ppl2.rank, ppl1.rank
-                    else:
-                        pass
+                    self.T._swap(ppl2, ppl1)
                 elif result == 2:
                     pass
                 elif result == 0:
-                    if ppl1.rank < ppl2.rank:
-                        ppl1.rank, ppl2.rank = ppl2.rank, ppl1.rank
-                    else:
-                        pass
+                    pass
         self.T.all_players = self.T.sort_by_rank(self.T.all_players)
         [print(x.rank) for x in self.T.all_players]
 
@@ -306,7 +304,7 @@ class MyApp(QtGui.QMainWindow, Ui_MainWindow):
         self.dial_make_pair.num_round.setValue(self.T.round + 1)
         self.dial_make_pair.show()
 
-    def     act_round_clicked(self):
+    def act_round_clicked(self):
         if self.dial_round is not ChildRound:
             self.dial_round = ChildRound()
             self.mdiArea.addSubWindow(self.dial_round)

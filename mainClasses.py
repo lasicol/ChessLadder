@@ -1,12 +1,17 @@
 import xml.etree.ElementTree as ET
 import os
 
+PROMOTE = 1
+DEFEND = 2
+WHITE = 1
+BLACK = 2
 
 class Player:
     """" The class which is describing player object"""
     id = 0
 
-    def __init__(self, first_name, last_name, elo, rank=0, p_id=0, last_opponent=0, list_of_opponents=None):
+    def __init__(self, first_name, last_name, elo, rank=0, p_id=0, last_opponent=0, list_of_opponents=None,
+                 last_game=None):
         self.first_name = first_name
         self.last_name = last_name
         self.elo = int(elo)
@@ -22,6 +27,7 @@ class Player:
             self.list_of_opponents = [0]
         else:
             self.list_of_opponents = list_of_opponents
+        self.last_game = last_game
 
     def add_opponent(self, pid):
         self.list_of_opponents.append(pid)
@@ -162,6 +168,8 @@ class Tournament:
         ppl2.rank = ppl1.rank
         for i in ranks:
             self.all_players[i].rank += 1
+        self.all_players = self.sort_by_rank(self.all_players)
+
 
     def _punishment(self, selected_players):
         ppl1 = None
@@ -177,11 +185,68 @@ class Tournament:
                     flag = True
                     self._swap(ppl1, ppl2)
 
+    def pair1(self, selected_players: list()):
+        defenders = []
+        promoters = []
+        for ppl in selected_players:
+            if ppl.last_game is not None:
+                if ppl.last_game.kind_of == DEFEND:
+                    promoters.append(ppl)
+                elif ppl.last_game.kind_of == PROMOTE:
+                    defenders.append(ppl)
+            else:
+                promoters.append(ppl)
+
+        for ppl_promoter in promoters:
+            for ppl_defender in defenders:
+                diff = ppl_promoter.rank - ppl_defender.rank
+                if ppl_promoter.id != ppl_defender.last_game.opponent.id and diff > 0:
+                    self.paired.append([ppl_promoter.id, ppl_defender.id])
+                    promoters.remove(ppl_promoter)
+                    defenders.remove(ppl_defender)
+                    break
+
+
+    def pair2(self, selected_players):
+        pass
+
     def make_pair(self, selected_players: list()):
+
+        self.paired = []
+
         self._punishment(selected_players)
-        self.all_players = self.sort_by_rank(self.all_players)
 
+        if self.round == 1:
+            for i in range(0, len(selected_players), 2):
+                try:
+                    self.paired.append([selected_players[i+1].id, selected_players[i].id])
+                except:
+                    pass
+        else:
+            self.pair1(selected_players)
 
+        players_left = list(selected_players)
+        for ppl in players_left:
+            for paired_ppl in self.paired:
+                if ppl.id in paired_ppl:
+                    print(players_left)
+                    players_left.remove(ppl)
+                    break
+        for pairs in self.paired:
+
+            if isinstance(pairs, list):
+                ppl1 = self.get_player_by_id(pairs[0])
+                ppl2 = self.get_player_by_id(pairs[1])
+
+                ppl1.last_game = Game(PROMOTE, ppl2)
+                ppl2.last_game = Game(DEFEND, ppl1)
+
+            else:
+                pass
+
+        print(self.paired)
+        print(players_left)
+        self.results.append([-1] * (len(self.paired)))
 
         # white = []
         # black = []
@@ -237,6 +302,20 @@ class Tournament:
             return False
         else:
             return ppl
+
+
+class Game:
+
+    def __init__(self, kind_of, opponent: Player):
+
+        self.kind_of = kind_of
+        self.opponent = opponent
+        if self.kind_of == PROMOTE:
+            self.colour = WHITE
+        else:
+            self.colour = BLACK
+
+
 
 if __name__ == "__main__":
     t = Tournament()
