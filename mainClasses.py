@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 import os
+from random import randint
 
 PROMOTE = 1
 DEFEND = 2
@@ -188,6 +189,7 @@ class Tournament:
     def pair1(self, selected_players: list()):
         defenders = []
         promoters = []
+        paired = []
         for ppl in selected_players:
             if ppl.last_game is not None:
                 if ppl.last_game.kind_of == DEFEND:
@@ -201,19 +203,60 @@ class Tournament:
             for ppl_defender in defenders:
                 diff = ppl_promoter.rank - ppl_defender.rank
                 if ppl_promoter.id != ppl_defender.last_game.opponent.id and diff > 0:
-                    self.paired.append([ppl_promoter.id, ppl_defender.id])
+                    paired.append([ppl_promoter.id, ppl_defender.id])
                     promoters.remove(ppl_promoter)
                     defenders.remove(ppl_defender)
                     break
 
+        return paired
 
     def pair2(self, selected_players):
-        pass
+        paired = []
+        copy_selected = list(selected_players)
+        done = False
+
+        while not done:
+            for i, ppl in enumerate(copy_selected):
+                max_value = len(copy_selected) - i - 1
+                if max_value == 1:
+                    if copy_selected[i+1] == ppl.last_game.opponent:
+                        done = True
+                        break
+                    else:
+                        paired.append([copy_selected[i + 1].id, ppl.id])
+                        copy_selected.remove(copy_selected[i + 1])
+                        copy_selected.remove(ppl)
+                        done = True
+                        break
+                elif max_value < 1:
+                    done = True
+                    break
+
+                if max_value > 3:
+                    max_value = 3
+                rand = randint(1, max_value)
+
+                while copy_selected[i+rand] == ppl.last_game.opponent:
+                    rand = randint(1, max_value)
+
+                paired.append([copy_selected[i+rand].id, ppl.id])
+                copy_selected.remove(copy_selected[i + rand])
+                copy_selected.remove(ppl)
+                break
+
+        return paired
+
+    def count_not_paired(self, selected_players, paired):
+        players_left = list(selected_players)
+        count = 0
+        for ppl in players_left:
+            for paired_ppl in paired:
+                if ppl.id in paired_ppl:
+                    count += 1
+        return len(players_left) - count
 
     def make_pair(self, selected_players: list()):
-
         self.paired = []
-
         self._punishment(selected_players)
 
         if self.round == 1:
@@ -223,17 +266,19 @@ class Tournament:
                 except:
                     pass
         else:
-            self.pair1(selected_players)
+            paired1 = self.pair1(selected_players)
+            paired2 = self.pair2(selected_players)
+            paired1_count = self.count_not_paired(selected_players, paired1)
+            paired2_count = self.count_not_paired(selected_players, paired2)
 
-        players_left = list(selected_players)
-        for ppl in players_left:
-            for paired_ppl in self.paired:
-                if ppl.id in paired_ppl:
-                    print(players_left)
-                    players_left.remove(ppl)
-                    break
+            print("Piared1: {}, paired2: {}".format(paired1_count, paired2_count))
+
+            if paired1_count > paired2_count:
+                self.paired = paired2
+            else:
+                self.paired = paired1
+
         for pairs in self.paired:
-
             if isinstance(pairs, list):
                 ppl1 = self.get_player_by_id(pairs[0])
                 ppl2 = self.get_player_by_id(pairs[1])
@@ -245,7 +290,7 @@ class Tournament:
                 pass
 
         print(self.paired)
-        print(players_left)
+        # print(players_left)
         self.results.append([-1] * (len(self.paired)))
 
         # white = []
